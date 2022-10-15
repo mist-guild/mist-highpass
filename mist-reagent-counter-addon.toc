@@ -1,0 +1,6 @@
+## Interface: 90200
+## Title: Mist Reagent Tracker
+## Author: Zak Pruitt
+## Version: 1.0
+
+main.lua
