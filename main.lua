@@ -100,8 +100,8 @@ local function GenerateReagentReportHandler()
                   if not output[sender] then
                      output[sender] = {}
                   end
-                  output[sender][name] = count
-                  print(count)
+                  local newTotal = (output[sender][name] or 0) + count
+                  output[sender][name] = newTotal
                end
          end
       else
