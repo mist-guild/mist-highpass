@@ -1,0 +1,24 @@
+{
+  "name": "mist-highpass",
+  "version": "1.0.0",
+  "description": "Mist Guild's addon & parser for tracking reagents in DF.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mist-guild/mist-highpass.git"
+  },
+  "author": "spuggies",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mist-guild/mist-highpass/issues"
+  },
+  "homepage": "https://github.com/mist-guild/mist-highpass#readme",
+  "dependencies": {
+    "electron": "^6.1.12",
+    "python-shell": "^3.0.1"
+  }
+}
