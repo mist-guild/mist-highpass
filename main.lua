@@ -1,4 +1,4 @@
-SLASH_MRG1 = "/mrg"
+SLASH_HIGHPASS1 = "/highpass"
 
 function KethoEditBox_Show(text)
    if not KethoEditBox then
@@ -8,10 +8,10 @@ function KethoEditBox_Show(text)
 
       f:SetBackdrop(
          {
-               bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
-               edgeFile = "Interface\\PVPFrame\\UI-Character-PVP-Highlight", -- this one is neat
-               edgeSize = 16,
-               insets = {left = 8, right = 6, top = 8, bottom = 8}
+            bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+            edgeFile = "Interface\\PVPFrame\\UI-Character-PVP-Highlight", -- this one is neat
+            edgeSize = 16,
+            insets = { left = 8, right = 6, top = 8, bottom = 8 }
          }
       )
       f:SetBackdropBorderColor(0, .44, .87, 0.5) -- darkblue
@@ -22,9 +22,9 @@ function KethoEditBox_Show(text)
       f:SetScript(
          "OnMouseDown",
          function(self, button)
-               if button == "LeftButton" then
-                  self:StartMoving()
-               end
+            if button == "LeftButton" then
+               self:StartMoving()
+            end
          end
       )
       f:SetScript("OnMouseUp", f.StopMovingOrSizing)
@@ -45,7 +45,7 @@ function KethoEditBox_Show(text)
       eb:SetScript(
          "OnEscapePressed",
          function()
-               f:Hide()
+            f:Hide()
          end
       )
       sf:SetScrollChild(eb)
@@ -65,18 +65,18 @@ function KethoEditBox_Show(text)
       rb:SetScript(
          "OnMouseDown",
          function(self, button)
-               if button == "LeftButton" then
-                  f:StartSizing("BOTTOMRIGHT")
-                  self:GetHighlightTexture():Hide() -- more noticeable
-               end
+            if button == "LeftButton" then
+               f:StartSizing("BOTTOMRIGHT")
+               self:GetHighlightTexture():Hide() -- more noticeable
+            end
          end
       )
       rb:SetScript(
          "OnMouseUp",
          function(self, button)
-               f:StopMovingOrSizing()
-               self:GetHighlightTexture():Show()
-               eb:SetWidth(sf:GetWidth())
+            f:StopMovingOrSizing()
+            self:GetHighlightTexture():Show()
+            eb:SetWidth(sf:GetWidth())
          end
       )
       f:Show()
@@ -95,14 +95,14 @@ local function GenerateReagentReportHandler()
       local _, _, sender, subject, _, _, _, hasItem = GetInboxHeaderInfo(i)
       if hasItem then
          for j = 1, ATTACHMENTS_MAX_RECEIVE do
-               local name, itemID, texture, count, quality, canUse = GetInboxItem(i, j)
-               if name then
-                  if not output[sender] then
-                     output[sender] = {}
-                  end
-                  local newTotal = (output[sender][name] or 0) + count
-                  output[sender][name] = newTotal
+            local name, itemID, texture, count, quality, canUse = GetInboxItem(i, j)
+            if name then
+               if not output[sender] then
+                  output[sender] = {}
                end
+               local newTotal = (output[sender][itemID] or 0) + count
+               output[sender][itemID] = newTotal
+            end
          end
       else
          print("Message", subject, "from", sender, "has no attachments.")
@@ -114,10 +114,10 @@ local function GenerateReagentReportHandler()
    for k, v in pairs(output) do
       outputText = outputText .. k .. "\n"
       for k2, v2 in pairs(v) do
-         outputText = outputText .. " - " .. k2 .. " " .. v2 .. "\n"
+         outputText = outputText .. "-" .. k2 .. " " .. v2 .. "\n"
       end
    end
    KethoEditBox_Show(outputText)
 end
 
-SlashCmdList["MRG"] = GenerateReagentReportHandler
+SlashCmdList["HIGHPASS"] = GenerateReagentReportHandler
