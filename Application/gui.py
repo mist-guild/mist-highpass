@@ -7,9 +7,10 @@ class HighpassGUI(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Highpass")
-        self.iconphoto(False, tk.PhotoImage(file='./application/logo.png'))
+        self.iconphoto(False, tk.PhotoImage(
+            file='./application/assets/logo.png'))
         self.resizable(False, False)
-        
+
         self.parser = Parser()
 
         # Label Creation
@@ -44,6 +45,10 @@ class HighpassGUI(tk.Tk):
 
         # parse input
         self.parser.parse(input)
+
+        # confirmation
+        messagebox.showinfo(
+            "Highpass Success", "Parsing complete! Reagent counts have been published to both Valdrakken and the Google Sheet.")
 
     def run(self):
         self.mainloop()
