@@ -6,8 +6,11 @@ from parser import Parser
 class HighpassGUI(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.parser = Parser()
         self.title("Highpass")
+        self.iconphoto(False, tk.PhotoImage(file='./application/logo.png'))
+        self.resizable(False, False)
+        
+        self.parser = Parser()
 
         # Label Creation
         self.input_lbl = tk.Label(
@@ -21,14 +24,12 @@ class HighpassGUI(tk.Tk):
         self.input_txt.grid(row=1, column=0, padx=50, pady=10)
 
         # Button Creation
-        self.print_button = tk.Button(self,
-                                      text="Print",
-                                      command=self.parse)
-        self.print_button.grid(row=2, column=0, padx=50, pady=10)
-
-        # Label
-        self.lbl = tk.Label(self, text="")
-        self.lbl.grid(row=3, column=0, padx=50, pady=10)
+        self.parse_btn = tk.Button(self,
+                                   text="Parse",
+                                   bg="lightblue",
+                                   font=('calibri', 12),
+                                   command=self.parse)
+        self.parse_btn.grid(row=2, column=0, padx=50, pady=5, sticky="nesw")
 
     def parse(self):
         # validate input
@@ -43,6 +44,6 @@ class HighpassGUI(tk.Tk):
 
         # parse input
         self.parser.parse(input)
-        
+
     def run(self):
         self.mainloop()

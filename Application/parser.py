@@ -54,7 +54,7 @@ class Parser:
     def validate_input(self, input):
         # base case
         if input == "":
-            return False
+            return False, "Empty input!"
 
         # iterate through and validate
         input = input.splitlines()
