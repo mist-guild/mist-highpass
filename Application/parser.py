@@ -8,7 +8,7 @@ scope = [
     'https://www.googleapis.com/auth/drive',
     'https://www.googleapis.com/auth/drive.file'
 ]
-file_name = './Application/mist-highpass-65645aa69059.json'
+file_name = './application/mist-highpass-65645aa69059.json'
 creds = ServiceAccountCredentials.from_json_keyfile_name(file_name, scope)
 client = gspread.authorize(creds)
 
