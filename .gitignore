@@ -6,6 +6,8 @@ __pycache__/
 # C extensions
 *.so
 
+/Application/mist-highpass-65645aa69059.json
+
 # VSCode
 *.vscode
 
