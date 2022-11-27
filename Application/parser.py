@@ -1,5 +1,6 @@
 import re
-import json
+import os
+import requests
 import pandas as pd
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -39,8 +40,9 @@ class Parser:
 
     def __build_and_send_update_request(self):
         request_body = self.reagent_df.to_json(orient='records')
-        print(request_body)
-    
+        requests.put(os.getenv('VALDRAKKEN_URL'),
+                     data=request_body)
+
     def __publish_updates(self):
         self.__build_and_send_update_request()
         self.sheet.update(
