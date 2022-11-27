@@ -52,7 +52,6 @@ function KethoEditBox_Show(text)
 
       -- Resizable
       f:SetResizable(true)
-      f:SetMinResize(150, 100)
 
       local rb = CreateFrame("Button", "KethoEditBoxResizeButton", KethoEditBox)
       rb:SetPoint("BOTTOMRIGHT", -6, 7)
@@ -88,7 +87,20 @@ function KethoEditBox_Show(text)
    KethoEditBox:Show()
 end
 
-local function GenerateReagentReportHandler()
+function getReagentName(name, itemID)
+   local quality_table =
+   {
+      [1] = "Bronze",
+      [2] = "Silver",
+      [3] = "Gold",
+      [4] = "Diamond",
+      [5] = "Mythic"
+   };
+   local quality = quality_table[C_TradeSkillUI.GetItemReagentQualityByItemInfo(itemID)]
+   return name .. "*" .. quality
+end
+
+function GenerateReagentReportHandler()
    -- generate output dictionary
    local output = {}
    for i = 1, GetInboxNumItems() do
@@ -97,11 +109,12 @@ local function GenerateReagentReportHandler()
          for j = 1, ATTACHMENTS_MAX_RECEIVE do
             local name, itemID, texture, count, quality, canUse = GetInboxItem(i, j)
             if name then
+               local outputName = getReagentName(name, itemID)
                if not output[sender] then
                   output[sender] = {}
                end
-               local newTotal = (output[sender][itemID] or 0) + count
-               output[sender][itemID] = newTotal
+               local newTotal = (output[sender][outputName] or 0) + count
+               output[sender][outputName] = newTotal
             end
          end
       else
@@ -114,10 +127,17 @@ local function GenerateReagentReportHandler()
    for k, v in pairs(output) do
       outputText = outputText .. k .. "\n"
       for k2, v2 in pairs(v) do
-         outputText = outputText .. "-" .. k2 .. " " .. v2 .. "\n"
+         outputText = outputText .. "-" .. k2 .. "*" .. v2 .. "\n"
       end
    end
    KethoEditBox_Show(outputText)
 end
 
-SlashCmdList["HIGHPASS"] = GenerateReagentReportHandler
+function CallGenerateReagentReportSafely()
+   local success, err = pcall(GenerateReagentReportHandler)
+   if not success then
+      print("Error:", err)
+   end
+end
+
+SlashCmdList["HIGHPASS"] = CallGenerateReagentReportSafely
