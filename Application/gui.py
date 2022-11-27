@@ -4,9 +4,9 @@ frame = tk.Tk()
 frame.title("TextBox Input")
 
 
-def printInput():
+def parse_input():
     inp = input_txt.get(1.0, "end-1c")
-    lbl.config(text="Provided Input: "+inp)
+    tk.Message(frame, text=inp).grid(row=3, column=0, padx=50, pady=10)
 
 
 # TextBox Creation
@@ -21,9 +21,10 @@ input_txt = tk.Text(frame,
 input_txt.grid(row=1, column=0, padx=50, pady=10)
 
 # Button Creation
-printButton = tk.Button(frame,
+parse_btn = tk.Button(frame,
                         text="Print",
-                        command=printInput)
+                        command=parse_input)
+parse_btn.grid(row=2, column=0, padx=20, pady=10)
 
 # Label Creation
 lbl = tk.Label(frame, text="")
