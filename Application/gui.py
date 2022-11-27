@@ -1,31 +1,38 @@
 import tkinter as tk
 
-frame = tk.Tk()
-frame.title("TextBox Input")
 
+class HighpassGUI(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("Highpass")
 
-def parse_input():
-    inp = input_txt.get(1.0, "end-1c")
-    tk.Message(frame, text=inp).grid(row=3, column=0, padx=50, pady=10)
+        # Label Creation
+        self.input_lbl = tk.Label(
+            self, text="Enter Highpass output below:", font=('calibri', 12))
+        self.input_lbl.grid(row=0, column=0, padx=50, pady=5)
 
+        # TextBox Creation
+        self.input_txt = tk.Text(self,
+                                 height=20,
+                                 width=50)
+        self.input_txt.grid(row=1, column=0, padx=50, pady=10)
 
-# TextBox Creation
+        # Button Creation
+        self.print_button = tk.Button(self,
+                                      text="Print",
+                                      command=self.parse_input)
+        self.print_button.grid(row=2, column=0, padx=50, pady=10)
 
-input_lbl = tk.Label(
-    frame, text="Enter Highpass output below:", font=('calibri', 12))
-input_lbl.grid(row=0, column=0, padx=50, pady=5)
+        # Label
+        self.lbl = tk.Label(self, text="")
+        self.lbl.grid(row=3, column=0, padx=50, pady=10)
 
-input_txt = tk.Text(frame,
-                    height=20,
-                    width=50)
-input_txt.grid(row=1, column=0, padx=50, pady=10)
+    def parse_input(self):
+        inp = self.input_txt.get(1.0, "end-1c")
+        self.lbl.config(text="Provided Input: "+inp)
 
-# Button Creation
-parse_btn = tk.Button(frame,
-                        text="Print",
-                        command=parse_input)
-parse_btn.grid(row=2, column=0, padx=20, pady=10)
-
-# Label Creation
-lbl = tk.Label(frame, text="")
-frame.mainloop()
+    def run(self):
+        self.mainloop()
+        
+gui = HighpassGUI()
+gui.run()
