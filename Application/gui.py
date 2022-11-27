@@ -7,8 +7,8 @@ class HighpassGUI(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Highpass")
-        self.iconphoto(False, tk.PhotoImage(
-            file='./application/assets/logo.png'))
+        # self.iconphoto(False, tk.PhotoImage(
+        #     file='./assets/logo.png'))
         self.resizable(False, False)
 
         self.parser = Parser()
