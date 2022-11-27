@@ -1,4 +1,5 @@
 import re
+import json
 import pandas as pd
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -19,16 +20,16 @@ class Parser:
         self.reagent_df = pd.DataFrame(self.sheet.get_all_records())
         self.__check_and_fix_blank()
 
-    def __update_reagent_count(self, character, item, count):
-        idx = self.reagent_df.index[self.reagent_df['Character']
-                                    == character][0]
-        self.reagent_df.at[idx, item] = count
-
     def __check_and_fix_blank(self):
         # TODO: Populate the sheet with the correct headers
         if self.reagent_df.empty:
             self.reagent_df = self.reagent_df.append(
                 {'Character': "Remove Me"}, ignore_index=True)
+
+    def __update_reagent_count(self, character, item, count):
+        idx = self.reagent_df.index[self.reagent_df['Character']
+                                    == character][0]
+        self.reagent_df.at[idx, item] = count
 
     def __add_character(self, character):
         self.reagent_df = self.reagent_df.append(
@@ -36,7 +37,12 @@ class Parser:
         self.reagent_df = self.reagent_df.fillna(0)
         self.__publish_updates()
 
+    def __build_and_send_update_request(self):
+        request_body = self.reagent_df.to_json(orient='records')
+        print(request_body)
+    
     def __publish_updates(self):
+        self.__build_and_send_update_request()
         self.sheet.update(
             [self.reagent_df.columns.values.tolist()] + self.reagent_df.values.tolist())
 
@@ -48,7 +54,7 @@ class Parser:
         # iterate through and validate
         input = input.splitlines()
         for line in input:
-            if not re.match('-[\w\s]+.\*\w+\*\d+', line) and not re.match('[A-Za-zŽžÀ-ÿ]{1,12}', line):
+            if not re.fullmatch('-[\w\s]+.\*\w+\*\d+', line) and not re.fullmatch('[A-Za-zŽžÀ-ÿ]{1,12}', line):
                 return False, line
         return True, "success"
 
@@ -66,7 +72,6 @@ class Parser:
 
                 # update reagent count
                 if item in self.reagent_df.columns:
-                    print(item)
                     self.__update_reagent_count(current_character, item, count)
             else:
                 current_character = line
