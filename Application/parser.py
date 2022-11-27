@@ -44,7 +44,11 @@ class Parser:
     def __update_reagent_count(self, character, item, count):
         idx = self.reagent_df.index[self.reagent_df['Character']
                                     == character][0]
-        self.reagent_df.at[idx, item] = count
+        if self.reagent_df.at[idx, item] is None:
+            self.reagent_df.at[idx, item] = count
+        else:
+            self.reagent_df.at[idx, item] = int(self.reagent_df.at[idx, item]) + int(count)
+            
 
     def __add_character(self, character):
         self.reagent_df = self.reagent_df.append(
