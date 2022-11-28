@@ -47,8 +47,8 @@ class Parser:
         if self.reagent_df.at[idx, item] is None:
             self.reagent_df.at[idx, item] = count
         else:
-            self.reagent_df.at[idx, item] = int(self.reagent_df.at[idx, item]) + int(count)
-            
+            self.reagent_df.at[idx, item] = int(
+                self.reagent_df.at[idx, item]) + int(count)
 
     def __add_character(self, character):
         self.reagent_df = self.reagent_df.append(
@@ -59,7 +59,7 @@ class Parser:
     def __build_and_send_update_request(self):
         reagent_json = self.reagent_df.to_dict(orient='records')
         for character_json in reagent_json:
-            requests.put(os.getenv('VALDRAKKEN_URL') + f"/reagent/{character_json['Character']}",
+            requests.put(f"http://mistguild.pythonanywhere.com/reagent/{character_json['Character']}",
                          data=json.dumps(character_json),
                          headers={'Content-Type': 'application/json'})
 
@@ -98,5 +98,6 @@ class Parser:
             else:
                 current_character = line
                 if current_character not in self.reagent_df['Character'].values:
+                    # think i can remove the double publish
                     self.__add_character(current_character)
         self.__publish_updates()

@@ -1,14 +1,14 @@
 import tkinter as tk
 from tkinter import messagebox
-from parser import Parser
+from parser import Parser, resource_path
 
 
 class HighpassGUI(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Highpass")
-        # self.iconphoto(False, tk.PhotoImage(
-        #     file='./assets/logo.png'))
+        self.iconphoto(False, tk.PhotoImage(
+            file=resource_path('./assets/logo.png')))
         self.resizable(False, False)
 
         self.parser = Parser()
