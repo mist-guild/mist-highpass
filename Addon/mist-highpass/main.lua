@@ -97,7 +97,11 @@ function getReagentName(name, itemID)
       [5] = "Mythic"
    };
    local quality = quality_table[C_TradeSkillUI.GetItemReagentQualityByItemInfo(itemID)]
-   return name .. "*" .. quality
+   if quality then
+      return quality .. " " .. name
+   else
+      return name
+   end
 end
 
 function GenerateReagentReportHandler()
@@ -108,6 +112,8 @@ function GenerateReagentReportHandler()
       if hasItem then
          for j = 1, ATTACHMENTS_MAX_RECEIVE do
             local name, itemID, texture, count, quality, canUse = GetInboxItem(i, j)
+            
+            
             if name then
                local outputName = getReagentName(name, itemID)
                if not output[sender] then
