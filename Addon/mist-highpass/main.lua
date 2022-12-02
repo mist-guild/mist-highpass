@@ -1,93 +1,19 @@
 SLASH_HIGHPASS1 = "/highpass"
 
-function KethoEditBox_Show(text)
-   if not KethoEditBox then
-      local f = CreateFrame("Frame", "KethoEditBox", UIParent, "DialogBoxFrame")
-      f:SetPoint("CENTER")
-      f:SetSize(600, 500)
-
-      f:SetBackdrop(
-         {
-            bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
-            edgeFile = "Interface\\PVPFrame\\UI-Character-PVP-Highlight", -- this one is neat
-            edgeSize = 16,
-            insets = { left = 8, right = 6, top = 8, bottom = 8 }
-         }
-      )
-      f:SetBackdropBorderColor(0, .44, .87, 0.5) -- darkblue
-
-      -- Movable
-      f:SetMovable(true)
-      f:SetClampedToScreen(true)
-      f:SetScript(
-         "OnMouseDown",
-         function(self, button)
-            if button == "LeftButton" then
-               self:StartMoving()
-            end
-         end
-      )
-      f:SetScript("OnMouseUp", f.StopMovingOrSizing)
-
-      -- ScrollFrame
-      local sf = CreateFrame("ScrollFrame", "KethoEditBoxScrollFrame", KethoEditBox, "UIPanelScrollFrameTemplate")
-      sf:SetPoint("LEFT", 16, 0)
-      sf:SetPoint("RIGHT", -32, 0)
-      sf:SetPoint("TOP", 0, -16)
-      sf:SetPoint("BOTTOM", KethoEditBoxButton, "TOP", 0, 0)
-
-      -- EditBox
-      local eb = CreateFrame("EditBox", "KethoEditBoxEditBox", KethoEditBoxScrollFrame)
-      eb:SetSize(sf:GetSize())
-      eb:SetMultiLine(true)
-      eb:SetAutoFocus(false) -- dont automatically focus
-      eb:SetFontObject("ChatFontNormal")
-      eb:SetScript(
-         "OnEscapePressed",
-         function()
-            f:Hide()
-         end
-      )
-      sf:SetScrollChild(eb)
-
-      -- Resizable
-      f:SetResizable(true)
-
-      local rb = CreateFrame("Button", "KethoEditBoxResizeButton", KethoEditBox)
-      rb:SetPoint("BOTTOMRIGHT", -6, 7)
-      rb:SetSize(16, 16)
-
-      rb:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
-      rb:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
-      rb:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
-
-      rb:SetScript(
-         "OnMouseDown",
-         function(self, button)
-            if button == "LeftButton" then
-               f:StartSizing("BOTTOMRIGHT")
-               self:GetHighlightTexture():Hide() -- more noticeable
-            end
-         end
-      )
-      rb:SetScript(
-         "OnMouseUp",
-         function(self, button)
-            f:StopMovingOrSizing()
-            self:GetHighlightTexture():Show()
-            eb:SetWidth(sf:GetWidth())
-         end
-      )
-      f:Show()
-   end
-
-   if text then
-      KethoEditBoxEditBox:SetText(text)
-   end
-   KethoEditBox:Show()
+local function getBOEName(itemRarity)
+   local quality_table =
+   {
+      [0] = "Poor",
+      [1] = "Common",
+      [2] = "Uncommon",
+      [3] = "Rare",
+      [4] = "Epic"
+   };
+   local quality = quality_table[itemRarity];
+   return "BOE" .. "*" .. quality;
 end
 
-function getReagentName(name, itemID)
+local function getReagentName(name, itemID)
    local quality_table =
    {
       [1] = "Bronze",
@@ -98,7 +24,7 @@ function getReagentName(name, itemID)
    };
    local quality = quality_table[C_TradeSkillUI.GetItemReagentQualityByItemInfo(itemID)]
    if quality then
-      return quality .. " " .. name
+      return name .. "*" .. quality
    else
       return name
    end
@@ -111,11 +37,24 @@ function GenerateReagentReportHandler()
       local _, _, sender, subject, _, _, _, hasItem = GetInboxHeaderInfo(i)
       if hasItem then
          for j = 1, ATTACHMENTS_MAX_RECEIVE do
+            -- gather item info
             local name, itemID, texture, count, quality, canUse = GetInboxItem(i, j)
-            
-            
+            if itemID == nil then
+               break
+            end
+            _, _, itemRarity, _, _, itemType, itemSubType, _, _, _, _ = GetItemInfo(itemID)
+
+            -- if found, add to output string
             if name then
-               local outputName = getReagentName(name, itemID)
+               -- get name of item and rarity/quality
+               local outputName = ""
+               if itemType == "Armor" or itemType == "Weapon" then
+                  outputName = getBOEName(itemRarity)
+               else
+                  outputName = getReagentName(name, itemID)
+               end
+
+               -- add to hashmap
                if not output[sender] then
                   output[sender] = {}
                end
@@ -136,7 +75,9 @@ function GenerateReagentReportHandler()
          outputText = outputText .. "-" .. k2 .. "*" .. v2 .. "\n"
       end
    end
-   KethoEditBox_Show(outputText)
+
+   -- render output text
+   highpass:KethoEditBox_Show(outputText)
 end
 
 function CallGenerateReagentReportSafely()
