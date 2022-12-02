@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+/scripts/mist-highpass-65645aa69059.json
+
 # C extensions
 *.so
 
