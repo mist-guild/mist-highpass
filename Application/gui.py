@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-from parser import Parser, resource_path
+from parse import Parser, resource_path
 
 
 class HighpassGUI(tk.Tk):
