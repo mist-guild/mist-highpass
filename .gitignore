@@ -3,12 +3,13 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-/scripts/mist-highpass-65645aa69059.json
+mist-highpass-65645aa69059.json
+datamodel.txt
+output.txt
+output-new.txt
 
 # C extensions
 *.so
-
-/Application/mist-highpass-65645aa69059.json
 
 # VSCode
 *.vscode
