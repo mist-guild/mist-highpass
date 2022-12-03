@@ -93,11 +93,11 @@ class Parser:
         with open("ignored.txt", 'w') as f:
             for line in input:
                 line_split = line.split('*')
-                line_split[0] = line_split[0][1:]
+                item = line_split[0][1:]
 
                 if re.fullmatch(r'-[\w\s\'\-\:]+.\*\w+\*\d+', line):
                     # reformat reagent
-                    item = f"{line_split[0]} - {line_split[1]}"
+                    item = f"{item} - {line_split[1]}"
                     count = line_split[2]
 
                     # update reagent count
@@ -107,8 +107,7 @@ class Parser:
                         continue
                     f.write(f"{line}\n")
                 elif re.fullmatch(r'-[\w\s\'\-\:]+.\*\d+', line):
-                    # reformat reagent
-                    item = line_split[0][1:]
+                    # get count
                     count = line_split[1]
 
                     # update reagent count
