@@ -1,8 +1,4 @@
-import sys
 import re
-import os
-import requests
-import json
 import pandas as pd
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
