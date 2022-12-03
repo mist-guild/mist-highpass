@@ -124,3 +124,21 @@ class Parser:
                         continue
                     f.write(f"{line}\n")
         self.__publish_updates()
+
+    def check_missing_headers(self, input):
+        missed = False
+        with open("missed_headers.txt", 'w') as f:
+            lines = input.splitlines()
+            for line in lines:
+                if re.fullmatch(r'[A-Za-zŽžÀ-ÿ]{1,12}', line):
+                    continue
+
+                line_split = line.split('*')
+                item = line_split[0][1:]
+                if re.fullmatch(r'-[\w\s\'\-\:]+.\*\w+\*\d+', line):
+                    item = f"{item} - {line_split[1]}"
+
+                if not item in self.reagent_df.columns:
+                    missed = True
+                    f.write(f"{item}\n")
+        return missed
